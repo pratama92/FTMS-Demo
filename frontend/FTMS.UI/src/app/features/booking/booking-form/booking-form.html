@@ -1,0 +1,73 @@
+<h2>Booking</h2>
+
+<div class="form-container">
+  <form [formGroup]="form" (ngSubmit)="save()">
+    <div class="form-field">
+      <label>Vehicle</label>
+
+      <div class="lookup-field">
+        <input type="text" [value]="selectedVehicle" readonly />
+
+        <button type="button" class="btn btn-secondary" (click)="openVehicleLookup()">
+          Lookup
+        </button>
+      </div>
+
+      @if (form.controls.vehicleId.touched && form.controls.vehicleId.hasError('required')) {
+        <small>Vehicle is required.</small>
+      }
+    </div>
+
+    <div class="form-field">
+      <label>Destination</label>
+
+      <input type="text" formControlName="destinationLocation" />
+
+      @if (
+        form.controls.destinationLocation.touched &&
+        form.controls.destinationLocation.hasError('required')
+      ) {
+        <small>Destination is required.</small>
+      }
+    </div>
+
+    <div class="form-field">
+      <label>Departure Time</label>
+
+      <input type="datetime-local" formControlName="estimatedDepartureTime" />
+
+      @if (
+        form.controls.estimatedDepartureTime.touched &&
+        form.controls.estimatedDepartureTime.hasError('required')
+      ) {
+        <small>Departure time is required.</small>
+      }
+    </div>
+
+    <div class="form-field">
+      <label>Arrival Time</label>
+
+      <input type="datetime-local" formControlName="estimatedArrivalTime" />
+
+      @if (
+        form.controls.estimatedArrivalTime.touched &&
+        form.controls.estimatedArrivalTime.hasError('required')
+      ) {
+        <small>Arrival time is required.</small>
+      }
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Save</button>
+    </div>
+  </form>
+</div>
+
+<app-lookup-dialog
+  title="Select Vehicle"
+  [visible]="showVehicleLookup"
+  [items]="vehicles"
+  (close)="showVehicleLookup = false"
+  (selected)="selectVehicle($event)"
+>
+</app-lookup-dialog>

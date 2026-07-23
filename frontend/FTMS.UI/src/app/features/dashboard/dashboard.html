@@ -1,0 +1,103 @@
+<h2>Dispatcher Dashboard</h2>
+
+<div class="dashboard-toolbar">
+  <div class="date-selector">
+    <button (click)="changeDate(-1)">&lt;</button>
+
+    <span>
+      {{ formatDate() }}
+    </span>
+
+    <button (click)="changeDate(1)">&gt;</button>
+  </div>
+
+  <div class="vehicle-filter">
+    <mat-form-field appearance="outline">
+      <mat-label> Vehicle Filter </mat-label>
+
+      <mat-select
+        multiple
+        [ngModel]="selectedVehicleIds()"
+        (ngModelChange)="selectedVehicleIds.set($event)"
+      >
+        @for (vehicle of vehicles(); track vehicle.vehicleId) {
+          <mat-option [value]="vehicle.vehicleId">
+            {{ vehicle.vehicleCode }}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
+
+@if (loading()) {
+  <div class="dashboard-state">Loading timeline...</div>
+} @else if (visibleVehicles().length === 0) {
+  <div class="dashboard-state">No vehicles available.</div>
+} @else {
+  <div class="timeline-legend">
+    <div class="legend-row">
+      <span class="legend-title"> Booking </span>
+
+      <div class="legend-items">
+        <div class="legend-item">
+          <span class="legend-color created"></span>
+          Created
+        </div>
+
+        <div class="legend-item">
+          <span class="legend-color pending"></span>
+          Pending
+        </div>
+
+        <div class="legend-item">
+          <span class="legend-color confirmed"></span>
+          Confirmed
+        </div>
+
+        <div class="legend-item">
+          <span class="legend-color completed"></span>
+          Completed
+        </div>
+
+        <div class="legend-item">
+          <span class="legend-color cancelled"></span>
+          Cancelled
+        </div>
+      </div>
+    </div>
+
+    <div class="legend-row">
+      <span class="legend-title"> Trip </span>
+
+      <div class="legend-items">
+        <div class="legend-item">
+          <span class="legend-color trip-ready"></span>
+          Ready
+        </div>
+
+        <div class="legend-item">
+          <span class="legend-color trip-enroute"></span>
+          EnRoute
+        </div>
+
+        <div class="legend-item">
+          <span class="legend-color trip-completed"></span>
+          Completed
+        </div>
+
+        <div class="legend-item">
+          <span class="legend-color trip-cancelled"></span>
+          Cancelled
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-dashboard-timeline
+    [vehicles]="visibleVehicles()"
+    [bookings]="filteredBookings()"
+    (bookingSelected)="openBooking($event)"
+  >
+  </app-dashboard-timeline>
+}

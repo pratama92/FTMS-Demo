@@ -1,0 +1,341 @@
+<h2>Booking Detail</h2>
+
+@if (booking(); as item) {
+  <h3>Booking Information</h3>
+
+  <p>
+    Booking Number:
+    {{ item.bookingNumber }}
+  </p>
+
+  <p>
+    Destination:
+    {{ item.destinationLocation }}
+  </p>
+
+  <p>
+    Departure:
+    {{ formatBusinessTime(item.estimatedDepartureTime) }}
+  </p>
+
+  <p>
+    Arrival:
+    {{ formatBusinessTime(item.estimatedArrivalTime) }}
+  </p>
+
+  <p>
+    Status Booking:
+    {{ item.status }}
+  </p>
+
+  @if (trip(); as currentTrip) {
+    <h3>Trip</h3>
+
+    <p>
+      Status Trip:
+      {{ currentTrip.status }}
+    </p>
+
+    <p>
+      Start Trip:
+      {{ currentTrip.startedAt }}
+    </p>
+
+    @if (currentTrip.status != 'Cancelled') {
+      <p>
+        Finish Trip:
+        {{ currentTrip.completedAt }}
+      </p>
+    }
+
+    @if (currentTrip.status == 'Cancelled') {
+      <p>
+        Status Trip:
+        {{ currentTrip.cancellationReason }}
+      </p>
+    }
+  }
+
+  <h3>Vehicle</h3>
+
+  <p>
+    Vehicle Code:
+    {{ item.vehicleCode }}
+  </p>
+
+  <h3>Driver</h3>
+
+  <p>
+    Driver Name:
+    {{ item.driverName ?? 'No driver assigned' }}
+
+    @if (
+      item.driverName &&
+      item.status !== 'Confirmed' &&
+      item.status !== 'Completed' &&
+      item.status !== 'Cancelled'
+    ) {
+      <button type="button" class="btn btn-danger" (click)="removeDriver()">✕</button>
+    }
+  </p>
+
+  @if (item.status !== 'Confirmed' && item.status !== 'Completed' && item.status !== 'Cancelled') {
+    <button type="button" class="btn btn-secondary" (click)="openDriverLookup()">Add Driver</button>
+  }
+
+  <h3>Passengers</h3>
+
+  @if (item.status !== 'Confirmed' && item.status !== 'Completed' && item.status !== 'Cancelled') {
+    <button type="button" class="btn btn-secondary" (click)="openPassengerLookup()">
+      Add Regular Passenger
+    </button>
+
+    <button type="button" class="btn btn-secondary" (click)="openGuestPassenger()">
+      Add Guest Passenger
+    </button>
+  }
+
+  @if (item.passengers.length > 0) {
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>Type</th>
+          <th>Pickup</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (passenger of item.passengers; track passenger.bookingPassengerId) {
+          <tr>
+            <td>
+              {{ passenger.guestName ?? passenger.personName }}
+            </td>
+
+            <td>
+              {{ passenger.guestPhone ?? passenger.personPhone }}
+            </td>
+
+            <td>
+              {{ passenger.passengerType }}
+            </td>
+
+            <td>
+              {{ passenger.pickupLocation }}
+            </td>
+
+            @if (
+              item.status !== 'Confirmed' &&
+              item.status !== 'Completed' &&
+              item.status !== 'Cancelled'
+            ) {
+              <td class="action-column">
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  (click)="removePassenger(passenger.bookingPassengerId)"
+                >
+                  Remove
+                </button>
+
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="openChangePickupLocation(passenger.bookingPassengerId)"
+                >
+                  Change Pickup
+                </button>
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else {
+    <p>No passengers</p>
+  }
+
+  <hr />
+
+  <h3>Actions</h3>
+
+  @if (item.status === 'Pending') {
+    <button type="button" class="btn btn-secondary" (click)="confirmBooking()">
+      Confirm Booking
+    </button>
+  }
+
+  @if (trip(); as currentTrip) {
+    @if (currentTrip.status === 'Ready') {
+      <button type="button" class="btn btn-secondary" (click)="showStartTrip()">Start Trip</button>
+    }
+
+    @if (currentTrip.status === 'EnRoute') {
+      <button type="button" class="btn btn-secondary" (click)="showFinishTrip()">
+        Finish Trip
+      </button>
+    }
+  }
+
+  @if (item.status !== 'Confirmed' && item.status !== 'Completed' && item.status !== 'Cancelled') {
+    <button type="button" class="btn btn-secondary" (click)="cancelBooking()">
+      Cancel Booking
+    </button>
+  }
+
+  @if (trip(); as currentTrip) {
+    @if (
+      item.status == 'Confirmed' &&
+      currentTrip.status !== 'Completed' &&
+      currentTrip.status !== 'Cancelled'
+    ) {
+      <button type="button" class="btn btn-secondary" (click)="openCancelTrip()">
+        Cancel Trip
+      </button>
+    }
+  }
+}
+
+<app-lookup-dialog
+  title="Select Driver"
+  [visible]="showDriverLookup"
+  [items]="drivers()"
+  (close)="showDriverLookup = false"
+  (selected)="selectDriver($event)"
+>
+</app-lookup-dialog>
+
+<app-lookup-dialog
+  [title]="'Select Passenger'"
+  [visible]="showPassengerLookup"
+  [items]="passengers()"
+  (selected)="selectPassenger($event)"
+  (close)="showPassengerLookup = false"
+>
+</app-lookup-dialog>
+
+@if (showCancelTripDialog) {
+  <div class="modal-overlay">
+    <div class="modal">
+      <p>Cancel Reason</p>
+
+      <input
+        [value]="cancelReason()"
+        (input)="cancelReason.set($any($event.target).value)"
+        placeholder="Reason"
+      />
+
+      <button type="button" class="btn btn-secondary" (click)="closeConfirmCancel()">Close</button>
+      <button type="button" class="btn btn-secondary" (click)="confirmCancelTrip()">Confirm</button>
+    </div>
+  </div>
+}
+
+@if (selectedPassenger(); as passenger) {
+  <div class="modal-overlay">
+    <div class="modal">
+      <p>
+        Selected:
+        {{ passenger.lookupName }}
+      </p>
+
+      <input
+        [value]="pickupLocation()"
+        (input)="pickupLocation.set($any($event.target).value)"
+        placeholder="Pickup Location"
+        required
+      />
+
+      <button type="button" class="btn btn-secondary" (click)="cancelSavePassenger()">
+        Cancel
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="savePassenger()">
+        Add Passenger
+      </button>
+    </div>
+  </div>
+}
+
+@if (showGuestPassenger) {
+  <div class="modal-overlay">
+    <div class="modal">
+      <p>Guest Name</p>
+
+      <input [value]="guestName()" (input)="guestName.set($any($event.target).value)" />
+
+      <p>Guest Phone</p>
+
+      <input [value]="guestPhone()" (input)="guestPhone.set($any($event.target).value)" />
+
+      <p>Pickup Location</p>
+
+      <input [value]="pickupLocation()" (input)="pickupLocation.set($any($event.target).value)" />
+
+      <button type="button" class="btn btn-secondary" (click)="closeGuestPassenger()">
+        Cancel
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="saveGuestPassenger()">
+        Add Guest
+      </button>
+    </div>
+  </div>
+}
+
+@if (showChangePickupLocation) {
+  <div class="modal-overlay">
+    <div class="modal">
+      <p>New Pickup Location</p>
+
+      <input [value]="pickupLocation()" (input)="pickupLocation.set($any($event.target).value)" />
+
+      <button type="button" class="btn btn-secondary" (click)="cancelChangePickupLocation()">
+        Cancel
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="changePickupLocation()">
+        Submit
+      </button>
+    </div>
+  </div>
+}
+
+@if (showStartTripDialog) {
+  <div class="modal-overlay">
+    <div class="modal">
+      <p>New Pickup Location</p>
+
+      <input
+        type="datetime-local"
+        required
+        [value]="tripTimeRequest()"
+        (input)="tripTimeRequest.set($any($event.target).value)"
+      />
+
+      <button type="button" class="btn btn-secondary" (click)="closeConfirmStartTrip()">
+        Cancel
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="confirmStartTrip()">Submit</button>
+    </div>
+  </div>
+}
+
+@if (showFinishTripDialog) {
+  <div class="modal-overlay">
+    <div class="modal">
+      <p>New Pickup Location</p>
+
+      <input
+        type="datetime-local"
+        required
+        [value]="tripTimeRequest()"
+        (input)="tripTimeRequest.set($any($event.target).value)"
+      />
+
+      <button type="button" class="btn btn-secondary" (click)="closeConfirmFinishTrip()">
+        Cancel
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="confirmFinishTrip()">Submit</button>
+    </div>
+  </div>
+}

@@ -1,0 +1,39 @@
+@if (visible) {
+  <div class="overlay">
+    <div class="dialog">
+      <div class="header">
+        <h3>{{ title }}</h3>
+
+        <button type="button" class="btn-secondary" class="close-button" (click)="close.emit()">✕</button>
+      </div>
+
+      <div class="search">
+        <input type="text" [(ngModel)]="keyword" placeholder="Search..." />
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+
+              <th class="action-column"></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (item of filteredItems; track item.lookupId) {
+              <tr>
+                <td>{{ item.lookupName }}</td>
+
+                <td class="action-column">
+                  <button type="button" class="btn-secondary" (click)="selected.emit(item)">Select</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+}

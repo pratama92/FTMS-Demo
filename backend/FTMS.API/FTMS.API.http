@@ -1,0 +1,6 @@
+@FTMS_HostAddress = https://localhost:7170
+
+GET {{FTMS_HostAddress}}/api/person
+Accept: application/json
+
+###

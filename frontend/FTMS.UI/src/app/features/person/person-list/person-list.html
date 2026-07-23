@@ -1,0 +1,65 @@
+<h2>Persons</h2>
+
+<div class="page-toolbar">
+  <span class="total"> Total: {{ persons().length }} </span>
+
+  <a routerLink="/persons/create" class="btn btn-primary"> Create Person </a>
+</div>
+
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Roles</th>
+        <th class="action-column">Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (person of persons(); track person.personId) {
+        <tr>
+          <td>{{ person.name }}</td>
+
+          <td>{{ person.email }}</td>
+
+          <td>{{ person.phone }}</td>
+
+          <td>{{ person.roles.join(', ') }}</td>
+
+          <td class="action-column">
+            <div class="action-buttons">
+              <a [routerLink]="['/persons/edit', person.personId]" class="btn btn-primary">
+                Edit
+              </a>
+
+              @if (!person.roles.includes('Driver')) {
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="addDriverRole(person.personId)"
+                >
+                  Assign Driver
+                </button>
+              } @else {
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="removeDriverRole(person.personId)"
+                >
+                  Remove Driver
+                </button>
+              }
+
+              <button type="button" class="btn btn-danger" (click)="deletePerson(person.personId)">
+                Delete
+              </button>
+            </div>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

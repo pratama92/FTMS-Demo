@@ -1,0 +1,30 @@
+<h1>FTMS Login</h1>
+
+<form [formGroup]="loginForm" (ngSubmit)="submit()">
+
+  <div>
+    <label>Username</label>
+    <input 
+      type="text"
+      formControlName="username">
+  </div>
+
+
+  <div>
+    <label>Password</label>
+    <input 
+      type="password"
+      formControlName="password">
+  </div>
+
+
+  <button type="submit">
+    Login
+  </button>
+
+</form>
+
+
+@if (errorMessage) {
+  <p>{{ errorMessage }}</p>
+}

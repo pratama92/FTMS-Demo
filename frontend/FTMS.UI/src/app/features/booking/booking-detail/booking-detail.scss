@@ -1,0 +1,283 @@
+h2 {
+    margin-bottom: 20px;
+}
+
+h3 {
+    margin-top: 24px;
+    margin-bottom: 12px;
+}
+
+p {
+    margin: 8px 0;
+}
+
+
+/* Sections */
+
+.section {
+
+    margin-bottom: 24px;
+
+    padding: 16px;
+
+    border: 1px solid #e0e0e0;
+
+    border-radius: 8px;
+
+    background: white;
+}
+
+.section h3 {
+
+    margin-top: 0;
+
+}
+
+
+/* Information */
+
+.info-row {
+
+    margin-bottom: 8px;
+
+}
+
+
+/* Actions */
+
+.action-bar {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    flex-wrap: wrap;
+
+}
+
+
+/* Passenger Table */
+
+table {
+
+    width: auto;
+
+    min-width: 600px;
+
+    border-collapse: collapse;
+
+    background: white;
+
+}
+
+th,
+td {
+
+    padding: 6px 10px;
+
+    text-align: left;
+
+    border-bottom: 1px solid #eeeeee;
+
+    vertical-align: middle;
+
+    font-size: 14px;
+
+}
+
+th {
+
+    background: #fafafa;
+
+    font-weight: 600;
+
+}
+
+.action-column {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    white-space: nowrap;
+
+}
+
+
+/* Action column */
+
+.action-column {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    white-space: nowrap;
+
+}
+
+
+/* Inputs */
+
+input {
+
+    width: 100%;
+
+    padding: 8px 10px;
+
+    border: 1px solid #d0d0d0;
+
+    border-radius: 6px;
+
+    box-sizing: border-box;
+
+    font: inherit;
+
+}
+
+
+input:focus {
+
+    outline: none;
+
+    border-color: #1976d2;
+
+}
+
+
+/* Buttons */
+
+.btn {
+
+    display: inline-block;
+
+    padding: 6px 12px;
+
+    border: 1px solid transparent;
+
+    border-radius: 6px;
+
+    font-size: 14px;
+
+    font-weight: 500;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+}
+
+button+button {
+    margin-left: 8px;
+}
+
+
+.btn-secondary {
+
+    background: #eeeeee;
+
+    border-color: #d0d0d0;
+
+    color: #333;
+
+}
+
+
+.btn-secondary:hover {
+
+    background: #e0e0e0;
+
+}
+
+
+.btn-danger {
+
+    background: #d32f2f;
+
+    border-color: #d32f2f;
+
+    color: white;
+
+}
+
+
+.btn-danger:hover {
+
+    background: #b71c1c;
+
+}
+
+
+/* Divider */
+
+hr {
+
+    margin: 24px 0;
+
+    border: 0;
+
+    border-top: 1px solid #ddd;
+
+}
+
+
+/* Modal */
+
+.modal-overlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    z-index: 1000;
+
+    background: rgba(0, 0, 0, 0.35);
+
+}
+
+
+.modal {
+
+    width: 400px;
+
+    padding: 24px;
+
+    background: white;
+
+    border-radius: 8px;
+
+}
+
+
+.modal label {
+
+    display: block;
+
+    margin-top: 12px;
+
+    font-weight: 600;
+
+}
+
+
+.modal input {
+
+    width: 100%;
+
+    margin: 8px 0;
+
+    box-sizing: border-box;
+
+}

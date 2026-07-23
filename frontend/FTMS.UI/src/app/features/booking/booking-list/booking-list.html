@@ -1,0 +1,70 @@
+<h2>Bookings</h2>
+
+<div class="page-toolbar">
+  <div class="filters">
+    <input
+      type="text"
+      placeholder="Search booking..."
+      (input)="updateSearch($any($event.target).value)"
+    />
+
+    <select (change)="updateStatus($any($event.target).value)">
+      <option value="All">All Status</option>
+      <option value="Created">Created</option>
+      <option value="Pending">Pending</option>
+      <option value="Confirmed">Confirmed</option>
+      <option value="Completed">Completed</option>
+      <option value="Cancelled">Cancelled</option>
+    </select>
+  </div>
+
+  <a routerLink="/bookings/create" class="btn btn-primary"> Create Booking </a>
+</div>
+
+<p class="total">Total: {{ filteredBookings().length }}</p>
+
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Booking No</th>
+        <th>Vehicle</th>
+        <th>Driver</th>
+        <th>Destination</th>
+        <th>Departure</th>
+        <th>Arrival</th>
+        <th>Status</th>
+        <th>Created By</th>
+        <th class="action-column">Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (booking of filteredBookings(); track booking.bookingId) {
+        <tr>
+          <td>{{ booking.bookingNumber }}</td>
+
+          <td>{{ booking.vehicleCode }}</td>
+
+          <td>{{ booking.driverName }}</td>
+
+          <td>{{ booking.destinationLocation }}</td>
+
+          <td>{{ formatBusinessTime(booking.estimatedDepartureTime) }}</td>
+
+          <td>{{ formatBusinessTime(booking.estimatedArrivalTime) }}</td>
+
+          <td>{{ booking.status }}</td>
+
+          <td>{{ booking.createdByPersonName }}</td>
+
+          <td class="action-column">
+            <div class="action-buttons">
+              <a [routerLink]="['/bookings', booking.bookingId]" class="btn btn-primary"> View </a>
+            </div>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

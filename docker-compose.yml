@@ -1,0 +1,38 @@
+services:
+
+  ftms-database:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: ftms-database
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "YourStrong!Passw0rd"
+    ports:
+      - "1433:1433"
+    volumes:
+      - ftms-sql-data:/var/opt/mssql
+
+  ftms-backend:
+    build:
+      context: ./backend
+      dockerfile: FTMS.API/Dockerfile
+    container_name: ftms-backend
+    depends_on:
+      - ftms-database
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Server=ftms-database,1433;Database=FTMS;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True"
+    ports:
+      - "8080:8080"
+
+  ftms-frontend:
+    build:
+      context: ./frontend/FTMS.UI
+      dockerfile: Dockerfile
+    container_name: ftms-frontend
+    depends_on:
+      - ftms-backend
+    ports:
+      - "4200:80"
+
+volumes:
+  ftms-sql-data:

@@ -1,0 +1,81 @@
+<h2>Vehicles</h2>
+
+<div class="page-toolbar">
+  <span class="total"> Total: {{ vehicles().length }} </span>
+
+  <a routerLink="/vehicles/create" class="btn btn-primary">
+    Create Vehicle
+  </a>
+</div>
+
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Vehicle Code</th>
+        <th>License Plate</th>
+        <th>Brand</th>
+        <th>Model</th>
+        <th>Year</th>
+        <th>Seats</th>
+        <th>Status</th>
+        <th class="action-column">Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (vehicle of vehicles(); track vehicle.vehicleId) {
+        <tr>
+          <td>{{ vehicle.vehicleCode }}</td>
+
+          <td>{{ vehicle.licensePlate }}</td>
+
+          <td>{{ vehicle.brand }}</td>
+
+          <td>{{ vehicle.model }}</td>
+
+          <td>{{ vehicle.year }}</td>
+
+          <td>{{ vehicle.seatCapacity }}</td>
+
+          <td>{{ vehicle.status }}</td>
+
+          <td class="action-column">
+            <div class="action-buttons">
+              <a
+                [routerLink]="['/vehicles/edit', vehicle.vehicleId]"
+                class="btn btn-primary">
+                Edit
+              </a>
+
+              <button
+                type="button"
+                class="btn btn-danger"
+                (click)="delete(vehicle.vehicleId)">
+                Delete
+              </button>
+
+              @if (vehicle.status == 'Available') {
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="markAsMaintenance(vehicle.vehicleId)">
+                  Maintenance
+                </button>
+              }
+
+              @if (vehicle.status == 'Maintenance') {
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  (click)="markAsAvailable(vehicle.vehicleId)">
+                  Available
+                </button>
+              }
+            </div>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

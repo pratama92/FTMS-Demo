@@ -1,0 +1,127 @@
+<h2>
+  {{ vehicleId() ? 'Edit Vehicle' : 'Create Vehicle' }}
+</h2>
+
+<form [formGroup]="form" (ngSubmit)="save()">
+  <p>
+    <label> Vehicle Code </label>
+    <br />
+
+    <input type="text" formControlName="vehicleCode" />
+  </p>
+
+  <p>
+    <label> License Plate </label>
+    <br />
+
+    <input type="text" formControlName="licensePlate" />
+  </p>
+
+  <p>
+    <label> Chassis Number </label>
+    <br />
+
+    <input type="text" formControlName="chassisNumber" />
+  </p>
+
+  <p>
+    <label> Engine Number </label>
+    <br />
+
+    <input type="text" formControlName="engineNumber" />
+  </p>
+
+  <p>
+    <label> Brand </label>
+    <br />
+
+    <input type="text" formControlName="brand" />
+  </p>
+
+  <p>
+    <label> Model </label>
+    <br />
+
+    <input type="text" formControlName="model" />
+  </p>
+
+  <p>
+    <label> Year </label>
+    <br />
+
+    <input type="number" formControlName="year" />
+  </p>
+
+  <p>
+    <label> Color </label>
+    <br />
+
+    <input type="text" formControlName="color" />
+  </p>
+
+  <p>
+    <label> Vehicle Type </label>
+    <br />
+
+    <select formControlName="vehicleType">
+      <option value="MPV">MPV</option>
+
+      <option value="Bus">Bus</option>
+
+      <option value="Truck">Truck</option>
+    </select>
+  </p>
+
+  <p>
+    <label> Fuel Type </label>
+    <br />
+
+    <select formControlName="fuelType">
+      <option value="Gasoline">Gasoline</option>
+
+      <option value="Diesel">Diesel</option>
+
+      <option value="Electric">Electric</option>
+    </select>
+  </p>
+
+  <p>
+    <label> Drivetrain </label>
+    <br />
+
+    <select formControlName="drivetrain">
+      <option value="FWD">FWD</option>
+
+      <option value="RWD">RWD</option>
+
+      <option value="AWD">AWD</option>
+    </select>
+  </p>
+
+  <p>
+    <label> Transmission </label>
+    <br />
+
+    <select formControlName="transmission">
+      <option value="Automatic">Automatic</option>
+
+      <option value="Manual">Manual</option>
+    </select>
+  </p>
+
+  <p>
+    <label> Seat Capacity </label>
+    <br />
+
+    <input type="number" formControlName="seatCapacity" />
+  </p>
+
+  <p>
+    <label> Cargo Capacity </label>
+    <br />
+
+    <input type="number" formControlName="cargoCapacity" />
+  </p>
+
+  <button type="submit">Save</button>
+</form>

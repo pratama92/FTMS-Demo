@@ -1,0 +1,92 @@
+<div class="timeline">
+  <!-- Timeline Header -->
+  <div class="timeline-row header">
+    <div class="vehicle">Vehicle</div>
+
+    <div class="track">
+      <div class="now-line" [style.left.px]="getNowPosition()">
+        <span>NOW</span>
+      </div>
+
+      @for (hour of hours; track hour) {
+      <div class="hour" [style.left.px]="getHourPosition(hour)">
+        {{ hour }}:00
+      </div>
+      }
+    </div>
+  </div>
+
+  <!-- Vehicle Rows -->
+  @for (vehicle of vehicles(); track vehicle.vehicleId) {
+  <div class="timeline-row">
+    <div class="vehicle">{{ vehicle.vehicleCode }}</div>
+
+    <div class="track">
+      @for (booking of getBookings(vehicle.vehicleId); track booking.bookingId)
+      {
+      <div
+        class="booking"
+        (click)="openBookingDetail(booking)"
+        (mouseenter)="showBookingInfo(booking, $event)"
+        (mouseleave)="hideBookingInfo()"
+        [style.left.px]="getLeft(booking.estimatedDepartureTime)"
+        [style.width.px]="
+              getWidth(booking.estimatedDepartureTime, booking.estimatedArrivalTime)
+            "
+      >
+        <div
+          class="booking-status"
+          [style.background-color]="getBookingColor(booking.status)"
+        ></div>
+
+        @if (booking.statusTrip) {
+        <div
+          class="trip-status"
+          [style.background-color]="getTripColor(booking.statusTrip)"
+        ></div>
+        }
+      </div>
+      }
+    </div>
+  </div>
+  }
+</div>
+
+@if (hoveredBooking()) {
+<div
+  class="booking-tooltip"
+  [style.left.px]="tooltipX"
+  [style.top.px]="tooltipY"
+>
+  <div class="tooltip-title">{{ hoveredBooking()?.bookingNumber }}</div>
+
+  <div class="tooltip-row">
+    <span>Vehicle</span>
+    <strong>{{ hoveredBooking()?.vehicleCode }}</strong>
+  </div>
+
+  <div class="tooltip-row">
+    <span>Departure</span>
+    <strong>
+      {{ formatBusinessTime(hoveredBooking()?.estimatedDepartureTime) }}
+    </strong>
+  </div>
+
+  <div class="tooltip-row">
+    <span>Arrival</span>
+    <strong>
+      {{ formatBusinessTime(hoveredBooking()?.estimatedArrivalTime) }}
+    </strong>
+  </div>
+
+  <div class="tooltip-row">
+    <span>Booking</span>
+    <strong>{{ hoveredBooking()?.status }}</strong>
+  </div>
+
+  <div class="tooltip-row">
+    <span>Trip</span>
+    <strong>{{ hoveredBooking()?.statusTrip ?? 'Not Started' }}</strong>
+  </div>
+</div>
+}
